@@ -39,7 +39,7 @@ class Box(object):
 
     def render(self, stream, indent=0):
         stream.write(indentate(indent))
-        stream.write("cube(size = [%f, %f, %f], center = %s)\n" % (
+        stream.write("cube(size = [%f, %f, %f], center = %s);\n" % (
             self.w, self.d, self.h, self.center))
 
 
@@ -50,12 +50,12 @@ class Union(object):
         self.objects = objects
 
     def render(self, stream, indent=0):
-        self.write(indentate(indent))
-        self.write("union() {\n")
+        stream.write(indentate(indent))
+        stream.write("union() {\n")
         for o in self.objects:
             o.render(stream, indent + 2)
-        self.write(indentate(indent))
-        self.write("}\n")
+        stream.write(indentate(indent))
+        stream.write("}\n")
 
         
 class Translate(object):
@@ -100,4 +100,4 @@ class Sphere(object):
 
     def render(self, stream, indent=0):
         stream.write(indentate(indent))
-        stream.write("sphere(r = %f)\n" % self.radius)
+        stream.write("sphere(r = %f);\n" % self.radius)
