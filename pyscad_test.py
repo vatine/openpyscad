@@ -97,6 +97,29 @@ class UnionTest(unittest.TestCase):
         seen = dump.getvalue()
         self.assertEqual(seen, expected)
 
+
+class CylinderTest(unittest.TestCase):
+
+    def testNoParameters(self):
+        self.assertRaises(pyscad.ParameterError, pyscad.Cylinder)
+
+    def testNoHeight(self):
+        self.assertRaises(pyscad.ParameterError, pyscad.Cylinder, radius=14)
+
+    def testNoradiusOrDiameter(self):
+        self.assertRaises(pyscad.ParameterError, pyscad.Cylinder, height=14)
+
+    def testBothRadiusAndDiameter(self):
+        self.assertRaises(pyscad.ParameterError, pyscad.Cylinder, height=14, radius=1, diameter=14)
+
+    def testWithRadius(self):
+        dump = StringIO.StringIO()
+        c = pyscad.Cylinder(radius=1.0, height=2.0)
+        c.render(dump)
+        expected = 'cylinder(h = 2.000000, d = 2.000000, center = false);\n'
+        seen = dump.getvalue()
+        self.assertEqual(seen, expected)
+        
                 
 if __name__ == '__main__':
     unittest.main()

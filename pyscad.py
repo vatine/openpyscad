@@ -101,3 +101,43 @@ class Sphere(object):
     def render(self, stream, indent=0):
         stream.write(indentate(indent))
         stream.write("sphere(r = %f);\n" % self.radius)
+
+
+class Cylinder(object):
+    """Creates a cylinder.
+
+    This is an object with equal top and bottom radius the exact equivalent
+    of OpenSCAD's 'cylinder' is TruncatedCone.
+
+    Cylinder(radius=nnn, height=nnn)
+      or
+    Cylinder(diameter=nnn, height=nnn)
+    """
+
+    def __init__(self, radius=None, diameter=None, height=None, center=False):
+        if not height:
+            raise ParameterError(
+                "Cylinder expects to be passed heght, none detected.")
+        if radius or diameter:
+            if radius and diameter:
+                raise ParameterError(
+                    "Cylinder expects exactly one of radius"
+                    " or diameter, passed radius = %s, diameter = %s",
+                    radius, diameter)
+            if radius:
+                self.diameter = radius * 2.0
+            else:
+                self.diameter = diameter
+            self.height = height
+            self.center = center
+        else:
+            raise ParameterError(
+                "Cylinder expects radius or diameter, neither passed.")
+
+    def render(self, stream, indent=0):
+        center = "false"
+        if self.center:
+            center = "true"
+        stream.write(indentate(indent))
+        stream.write("cylinder(h = %f, d = %f, center = %s);\n" %
+                     (self.height, self.diameter, center))
