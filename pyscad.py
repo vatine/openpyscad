@@ -141,3 +141,50 @@ class Cylinder(object):
         stream.write(indentate(indent))
         stream.write("cylinder(h = %f, d = %f, center = %s);\n" %
                      (self.height, self.diameter, center))
+
+
+class TruncatedCone(object):
+    """The TruncatedCone takes a bottom radius/diameter (r1/d1), a top
+    radius/diameeter (r2/d2) and a height (height). It generated an
+    OpenSCAD cylinder."""
+
+    def __init__(self, r1=None, r2 = None, d1=None, d2=None, height=None, center=False):
+        if (r1 and d1) or (r2 and d2):
+            raise ParameterError(
+                "TruncatedCone, cannot specify both radius and diameter.")
+        if not (r1 or d1):
+            raise ParameterError("TruncatedCone, no bottom radius or diameter")
+        if not (r2 or d2):
+            raise ParameterError("TruncatedCone, no top radius or diameter")
+        if not height:
+            raise ParameterError("TruncatedCone, no height")
+            
+        if r1:
+            self.d1 = r1 * 2.0
+        else:
+            self.d1 = d1
+        if r2:
+            self.d2 = r2 * 2.0
+        else:
+            self.d2 = d2
+        self.height = height
+        self.center = center
+
+    def render(self, stream, indent=0):
+        center = "false"
+        if self.center:
+            center = "true"
+        stream.write(indentate(indent))
+        stream.write("cylinder(h = %f, d1 = %f, d2 = %f, center = %s);\n" %
+                     (self.height, self.d1, self.d2, center))
+
+
+class Point(object):
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def __str__(self):
+        return "[%f, %f, %f]" % (self.x, self.y, self.z)
+

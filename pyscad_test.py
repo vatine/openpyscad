@@ -121,5 +121,40 @@ class CylinderTest(unittest.TestCase):
         self.assertEqual(seen, expected)
         
                 
+class TruncatedconeTest(unittest.TestCase):
+
+    def testNothing(self):
+        self.assertRaises(pyscad.ParameterError, pyscad.TruncatedCone)
+
+    def testDoubleBottom(self):
+        self.assertRaises(pyscad.ParameterError, pyscad.TruncatedCone, r1=1, d1=2)
+
+    def testDoubleTop(self):
+        self.assertRaises(pyscad.ParameterError, pyscad.TruncatedCone, r2=1, d2=2)
+    def testNoHeight(self):
+        self.assertRaises(pyscad.ParameterError, pyscad.TruncatedCone, r1=1, d2=2)
+
+    def testNoCentering(self):
+        dump = StringIO.StringIO()
+        c = pyscad.TruncatedCone(r1=1.0, d2=3.0, height=2.0)
+        c.render(dump)
+        expected = 'cylinder(h = 2.000000, d1 = 2.000000, , d2 = 3.000000, center = false);\n'
+        
+    def testWithCentering(self):
+        dump = StringIO.StringIO()
+        c = pyscad.TruncatedCone(d1=2.0, r2=1.5, height=2.0, center=True)
+        c.render(dump)
+        expected = 'cylinder(h = 2.000000, d1 = 2.000000, , d2 = 3.000000, center = true);\n'
+
+
+class TestPoint(unittest.TestCase):
+    def testString(self):
+        p = pyscad.Point(1.0, 2.0, 3.0)
+        expected = "[1.000000, 2.000000, 3.000000]"
+        seen = str(p)
+        self.assertEqual(seen, expected)
+
+
+
 if __name__ == '__main__':
     unittest.main()
